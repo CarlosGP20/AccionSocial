@@ -1,0 +1,59 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use DB;
+
+class Lote_controller extends Controller
+{
+  public function index()
+  {
+  }
+
+  public function show()
+  {
+    $lotes = DB::table('lote')
+        ->join('dueno', 'dueno.dueno_id', '=', 'lote.dueno_id')
+        ->join('comunidad', 'lote.comunidad_id', '=', 'comunidad.comunidad_id')
+        ->select('lote.*', 'comunidad.comunidad_nombre','dueno.dueno_nombre')
+        ->get();
+
+    //return view('lotes', ['lotes' => $lotes]);
+  }
+
+  public function store(Request $request)//guarda un nuevo lote
+  {
+    $loteid = $request->input('lote_id');
+    $duenoid = $request->input('dueno_id');
+    $comunidadid = $request->input('comunidad_id');
+    $loteubicacion = $request->input('lote_ubicacion');
+    $data = array('lote_id'=>$loteid,'dueno_id'=>$duenoid,'comunidad_id'=>$comunidadid,'lote_ubicacion'=>$loteubicacion);
+    DB::table('lote')->insert($data);
+    return back();
+  }
+
+  public function destroy($loteid)
+  {
+    DB::table('lote')->where('lote_id', '=', $loteid)->delete();
+    return back();
+  }
+
+  public function edit($loteid)//Carga los datos de lote y sus tablas asociadas
+  {
+    $lote = DB::table('lote')->where('lote_id', $loteid)->first();
+    $comunidad = DB::table('comunidad')->select('comunidad_id', 'comunidad_nombre')->get();
+    $dueno = DB::table('dueno')->select('dueno_id', 'dueno_nombre')->get();
+    return view('lote_edit', ['lote'=>$lote,'comunidad'=>$comunidad,  'dueno' => $dueno]); //Retorna view para editar
+  }
+
+  public function update(Request $request)
+  {
+    $duenoid = $request->input('dueno_id');
+    $comunidadid = $request->input('comunidad_id');
+    $loteubicacion = $request->input('lote_ubicacion');
+    $data = array('dueno_id'=>$duenoid,'comunidad_id'=>$comunidadid,'lote_ubicacion'=>$loteubicacion);
+    DB::table('lote')->where('lote_id','=', $request->lote_id)->update($data);
+    return redirect('lotes'); //Redirecciona al view lotes
+  }
+}
