@@ -1,0 +1,72 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class Segusuario_controller extends Controller
+{
+  public function index()
+  {
+  }
+
+  public function show()
+  {
+    $ = DB::table('lote')
+        ->select('segusuario.*')
+        ->get();
+    //return view('lotes', ['lotes' => $lotes]);
+  }
+  public function verificar($usuario, $contraseña)//Carga los datos de usuario
+  {
+    $usuario = DB::table('segusuario')
+    ->select('usuario_id', 'usuario_username', 'usuario_nombre', 'usuario_email')
+    ->where('usuario_username', '=', $usuario)
+    ->where('usuario_contraseña', '=', $contraseña)
+    ->get();
+
+    if(count($dueno)!=null){
+          return view('principal', ['usuario'=>$usuario]); //Retorna pagina principal del sistema cuando el usuario inicia sesión
+    }
+    else {
+          return false;
+    }
+  }
+
+  public function store(Request $request)//guarda un nuevo usuario
+  {
+    $username = $request->input('usuario_username');
+    $nombre = $request->input('usuario_nombre');
+    $email = $request->input('usuario_email');
+    $contraseña = $request->input('usuario_contraseña');
+    $data = array('usuario_username'=>$username,'usuario_nombre'=>$nombre,'usuario_email'=>$email,'usuario_contraseña'=>$contraseña);
+    DB::table('segusuario')->insert($data);
+    return back();
+  }
+//Tal vez no se debería borrar un usuario
+/*
+  public function destroy($usuarioid) //Funcion para eliminar un usuario
+  {
+    DB::table('segusuario')->where('usuario_id', '=', $usuarioid)->delete();
+    return back();
+  }*/
+
+  public function edit($usuarioid)//Carga los datos del usuario
+  {
+    $usuario = DB::table('segusuario')
+    ->select('usuario_id', 'usuario_nombre','usuario_username','usuario_email',)
+    ->where('usuario_id','=',$usuarioid)
+    ->get();
+    return view('segusuarioedit', ['segusuario' => $usuario]); //Retorna view para editar
+  }
+
+  public function update(Request $request)
+  {
+    $usuarionombre = $request->input('usuario_nombre');
+    $usuarioemail = $request->input('usuario_email');
+    $usuariocontraseña = $request->input('usuario_contraseña');
+    $data = array('usuario_nombre'=>$usuarionombre,'usuario_email'=>$usuarioemail,'usuario_contraseña'=>$usuariocontraseña);
+    DB::table('segusuario')->where('usuario_id','=', $request->usuario_id)->update($data);
+    return redirect('principal'); //Redirecciona al view de Segusuario
+  }
+}
