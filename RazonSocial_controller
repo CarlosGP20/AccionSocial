@@ -1,0 +1,64 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use DB;
+use App\SegRol;
+use App\Comunidad;
+use App\RazonSocial;
+
+class RazonSocial_controller extends Controller
+{
+  public function index()
+  {
+  }
+
+  public function show()
+  {
+    $lotes = DB::table('Razon_Social')
+        ->join('SegRol', 'SegRol.rol_id', '=', 'Razon_Social.rol_id')
+        ->join('Comunidad', 'Comunidad.comunidad_id', '=', 'Razon_Social.comunidad_id')
+        ->select('Razon_Social.*', 'comunidad.comunidad_nombre','SegRol.rol_descripcion')
+        ->get();
+    //return view('RazonSocial', ['razonsocial' => $razonsocial]);
+  }
+
+  public function store(Request $request)//guarda un nuevo lote
+  {//Se asume que es autoincremental rsz_id
+    $rolid = $request->input('rol_id');
+    $rzsruc = $request->input('rzs_ruc');
+    $rzstelefono = $request->input('rzs_telefono');
+    $rzsdireccion = $request->input('rzs_direccion');
+    $rzsnombre = $request->input('rzs_nombre');
+    $data = array('rol_id'=>$rolid,'rzs_ruc'=>$rzsruc,'rzs_telefono'=>$rzstelefono,'rzs_direccion'=>$rzsdireccion,'rzs_nombre'=>$rzsnombre);
+    DB::table('Razon_Social')->insert($data);
+    return back();
+  }
+
+  public function destroy($rszid)
+  {
+    DB::table('Razon_Social')->where('rsz_id', '=', $rszid)->delete();
+    return back();
+  }
+
+  public function edit($rszid)//Carga los datos de razon socia y sus tablas asociadas
+  {
+    $razonsocial = DB::table('Razon_Social')->where('rsz_id', $rszid)->first();
+    $comunidad = DB::table('comunidad')->select('comunidad_id', 'comunidad_nombre')->get();
+    $segrol = DB::table('SegRol')->select('rol_id', 'rol_descripcion')->get();
+    return view('razonsocial_edit', ['razonsocial'=>$razonsocial,'comunidad'=>$comunidad,  'segrol' => $segrol]); //Retorna view para editar
+  }
+
+  public function update(Request $request)
+  {
+    $rolid = $request->input('rol_id');
+    $comunidadid = $request->input('comunidad_id');
+    $rzstelefono = $request->input('rzs_telefono');
+    $rzsdireccion = $request->input('rzs_direccion');
+    $rzsnombre = $request->input('rzs_nombre');
+    $data = array('rol_id'=>$rolid,'rzs_ruc'=>$rzsruc,'rzs_telefono'=>$rzstelefono,'rzs_direccion'=>$rzsdireccion,'rzs_nombre'=>$rzsnombre);
+    DB::table('Razon_Social')->where('rzs_id','=', $request->rsz_id)->update($data);
+    return redirect('RazonSocial'); //Redirecciona al view RazonSocial
+  }
+}
