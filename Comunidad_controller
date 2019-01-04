@@ -1,0 +1,71 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use DB;
+use App\Comunidad;
+use App\Parametro;
+use App\Dueno;
+
+class Comunidad_controller extends Controller
+{
+  public function index()
+  {
+  }
+
+  public function show()
+  {
+    $comunidad = DB::table('comunidad')
+        ->join('dueno', 'dueno.dueno_id', '=', 'comunidad.dueno_id')
+        ->join('parametro', 'parametro.par_id', '=', 'comunidad.par_id')
+        ->select('comunidad.*', 'dueno.dueno_nombre','parametro.par_iva','parametro.par_valormetrocubico','parametro.par_descuento','parametro.par_multa')
+        ->get();//Nota: Posiblemente no sea necesario consultar los datos de parametro
+
+    //return view('comunidad', ['comunidad' => $comunidad]);
+  }
+
+  public function store(Request $request)//guarda un nuevo lote
+  {
+    //Se asume que comunidad_id es autoincremental
+    $parametro = $request->input('par_id');
+    $duenoid = $request->input('dueno_id');
+    $comunidadnombre = $request->input('comunidad_nombre');
+    $comunidadvalorm3 = $request->input('comunidad_valor_m3');
+    $comunidaddescuento = $request->input('comunidad_descuento');
+    $comunidadmulta = $request->input('comunidad_multa');
+    $comunidademail = $request->input('comunidad_email');
+    $data = array('par_id'=>$parametro,'dueno_id'=>$duenoid,'comunidad_nombre'=>$comunidadnombre,'comunidad_valor_m3'=>$comunidadvalorm3,'comunidad_descuento'=>$comunidaddescuento,'comunidad_multa'=>$comunidadmulta,'comunidad_email'=>$comunidademail);
+    DB::table('comunidad')->insert($data);
+    return back();
+  }
+
+  public function destroy($comunidadid)
+  {
+    DB::table('comunidad')->where('comunidad_id', '=', $comunidadid)->delete();
+    return back();
+  }
+
+  public function edit($comunidadid)//Carga los datos de comunidad y sus tablas asociadas
+  {
+    $comunidad = DB::table('comunidad')->where('comunidad_id', $comunidadid)->first();
+    $parametro = DB::table('parametro')->select('par_id','parametro.par_iva','parametro.par_valormetrocubico','parametro.par_descuento','parametro.par_multa')->get();
+    $dueno = DB::table('dueno')->select('dueno_id', 'dueno_nombre')->get();
+    return view('comunidad_edit', ['comunidad'=>$comunidad,'parametro'=>$parametro, 'dueno' => $dueno]); //Retorna view para editar
+  }
+
+  public function update(Request $request)
+  {
+    $duenoid = $request->input('dueno_id');
+    $comunidadid = $request->input('comunidad_id');
+    $parametro = $request->input('par_id');
+    $comunidadnombre = $request->input('comunidad_nombre');
+    $comunidadvalorm3 = $request->input('comunidad_valor_m3');
+    $comunidaddescuento = $request->input('comunidad_descuento');
+    $comunidadmulta = $request->input('comunidad_multa');
+    $comunidademail = $request->input('comunidad_email');
+    $data = array('par_id'=>$parametro,'dueno_id'=>$duenoid,'comunidad_nombre'=>$comunidadnombre,'comunidad_valor_m3'=>$comunidadvalorm3,'comunidad_descuento'=>$comunidaddescuento,'comunidad_multa'=>$comunidadmulta,'comunidad_email'=>$comunidademail);
+    DB::table('comunidad')->where('comunidad_id','=', $request->comunidad_id)->update($data);
+    return redirect('comunidad'); //Redirecciona al view comunidad
+  }
+}
