@@ -1,0 +1,15 @@
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Comunidad extends Model
+{
+  protected $table = 'comunidad';
+  protected $primaryKey = 'comunidad_id';
+
+  public $timestamps = false;
+
+  protected $fillable = ['comunidad_id', 'par_id', 'dueno_id', 'comunidad_nombre', 'comunidad_valor_m3', 'comunidad_descuento', 'comunidad_multa', 'comunidad_email'];
+}
