@@ -1,0 +1,15 @@
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Parametro extends Model
+{
+  protected $table = 'parametro';
+  protected $primaryKey = 'par_id';
+
+  public $timestamps = false;
+
+  protected $fillable = ['par_id', 'par_iva', 'par_valormetrocubico', 'par_descuento','par_multa'];
+}
