@@ -1,0 +1,56 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use DB;
+use App\Parametro;
+
+
+class Parametro_controller extends Controller
+{
+  public function index()
+  {
+  }
+
+  public function show()
+  {
+    $parametro = DB::table('parametro')
+        ->select('parametro.*')
+        ->get();
+    //return view('parametro', ['parametro' => $parametro]);
+  }
+
+  public function store(Request $request)//guarda un nuevo parametro
+  {
+    $pariva = $request->input('par_iva');
+    $parvalormetrocubico = $request->input('par_valormetrocubico');
+    $pardescuento = $request->input('par_descuento');
+    $parmulta = $request->input('par_multa');
+    $data = array('par_iva'=>$pariva,'par_valormetrocubico'=>$parvalormetrocubico,'par_descuento'=>$pardescuento,'par_multa');
+    DB::table('parametro')->insert($data);
+    return back();
+  }
+
+  public function destroy($parid)
+  {
+    DB::table('parametro')->where('par_id', '=', $parametroid)->delete();
+    return back();
+  }
+
+  public function edit($parid)//Carga los datos de parametro
+  {
+    $parametro = DB::table('parametro')->where('par_id', $loteid)->first();
+    return view('parametro_edit', ['parametro'=>$parametro]); //Retorna view para editar
+  }
+
+  public function update(Request $request)
+  {
+    $duenoid = $request->input('dueno_id');
+    $comunidadid = $request->input('comunidad_id');
+    $loteubicacion = $request->input('lote_ubicacion');
+    $data = array('dueno_id'=>$duenoid,'comunidad_id'=>$comunidadid,'lote_ubicacion'=>$loteubicacion);
+    DB::table('lote')->where('lote_id','=', $request->lote_id)->update($data);
+    return redirect('lotes'); //Redirecciona al view parametros
+  }
+}
