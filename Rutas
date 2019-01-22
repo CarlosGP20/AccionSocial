@@ -1,0 +1,41 @@
+//Comunidad
+Route::post('guardarComunidad','Comunidad_controller@store');
+Route::post('eliminarComunidad','Comunidad_controller@destroy');
+Route::post('actualizarComunidad','Comunidad_controller@update');
+Route::post('/editarComunidad', 'Comunidad_controller@edit');
+Route::post('/showComunidades', 'Comunidad_controller@show');
+
+//Lote
+Route::post('/showLotes', 'Lote_controller@show');
+Route::post('guardarLote','Lote_controller@store');
+Route::post('eliminarLote','Lote_controller@destroy');
+Route::post('actualizarLote','Lote_controller@update');
+Route::post('/editarLote', 'Lote_controller@edit');
+
+//Parametro
+Route::post('/showParametros', 'Parametro_controller@show');
+Route::post('guardarParametro','Parametro_controller@store');
+Route::post('eliminarParametro','Parametro_controller@destroy');
+Route::post('actualizarParametro','Parametro_controller@update');
+Route::post('/editarParametro', 'Parametro_controller@edit');
+
+//RazonSocial
+Route::post('/showRazonSocial', 'RazonSocial_controller@show');
+Route::post('guardarRazonSocial','RazonSocial_controller@store');
+Route::post('eliminarRazonSocial','RazonSocial_controller@destroy');
+Route::post('actualizarRazonSocial','RazonSocial_controller@update');
+Route::post('/editarRazonSocial', 'RazonSocial_controller@edit');
+
+//SegRol
+Route::post('getRolCobrador', 'Segrol_controller@getRolCobrador');
+Route::post('guardarRol','Segrol_controller@store');
+Route::post('eliminarRol','Segrol_controller@destroy');
+Route::post('getRolRazonSocial','Segrol_controller@getRolRazonSocial');
+Route::post('getRolUsuario', 'Segrol_controller@getRolUsuario');
+
+//SegUsuario
+Route::post('verificarSegUsuario', 'Segusuario_controller@verificar');
+Route::post('nuevoUsuario','Segusuario_controller@store');
+//Route::post('eliminarUsuario','Segusuario_controller@destroy');
+Route::post('actualizarUsuario','Segusuario_controller@update');
+Route::post('editarUsuario', 'Segusuario_controller@edit');
