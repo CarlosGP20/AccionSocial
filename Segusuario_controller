@@ -12,7 +12,9 @@ class Segusuario_controller extends Controller
 
   public function show()
   {
-    $ = DB::table('lote')
+    $ = DB::table('segusuario')
+        ->join('SegRol', 'segusuario.rol_id', '=', 'segrol.rol_id')
+        ->join('razon_social', 'razon_social.rzs_id', '=', 'segusuario.rzs_id')
         ->select('segusuario.*')
         ->get();
     //return view('lotes', ['lotes' => $lotes]);
@@ -35,11 +37,13 @@ class Segusuario_controller extends Controller
 
   public function store(Request $request)//guarda un nuevo usuario
   {
+    $rolid = $request->input('rol_id');
+    $rzsid = $request->input('rzs_id');
     $username = $request->input('usuario_username');
     $nombre = $request->input('usuario_nombre');
     $email = $request->input('usuario_email');
     $contraseña = $request->input('usuario_contraseña');
-    $data = array('usuario_username'=>$username,'usuario_nombre'=>$nombre,'usuario_email'=>$email,'usuario_contraseña'=>$contraseña);
+    $data = array('usuario_username'=>$username,'rol_id'=>$rolid,'rzs_id'=>$rzsid,'usuario_nombre'=>$nombre,'usuario_email'=>$email,'usuario_contraseña'=>$contraseña);
     DB::table('segusuario')->insert($data);
     return back();
   }
@@ -54,7 +58,9 @@ class Segusuario_controller extends Controller
   public function edit($usuarioid)//Carga los datos del usuario
   {
     $usuario = DB::table('segusuario')
-    ->select('usuario_id', 'usuario_nombre','usuario_username','usuario_email',)
+    ->join('SegRol', 'segusuario.rol_id', '=', 'segrol.rol_id')
+    ->join('razon_social', 'razon_social.rzs_id', '=', 'segusuario.rzs_id')
+    ->select('usuario_id', 'usuario_nombre','usuario_username','usuario_email','usuario.rzs_id','usuario.rol_id')
     ->where('usuario_id','=',$usuarioid)
     ->get();
     return view('segusuarioedit', ['segusuario' => $usuario]); //Retorna view para editar
@@ -62,10 +68,12 @@ class Segusuario_controller extends Controller
 
   public function update(Request $request)
   {
+    $rolid = $request->input('rol_id');
+    $rzsid = $request->input('rzs_id');
     $usuarionombre = $request->input('usuario_nombre');
     $usuarioemail = $request->input('usuario_email');
     $usuariocontraseña = $request->input('usuario_contraseña');
-    $data = array('usuario_nombre'=>$usuarionombre,'usuario_email'=>$usuarioemail,'usuario_contraseña'=>$usuariocontraseña);
+    $data = array('rol_id'=>$rolid,'rzs_id'=>$rzsid,'usuario_nombre'=>$usuarionombre,'usuario_email'=>$usuarioemail,'usuario_contraseña'=>$usuariocontraseña);
     DB::table('segusuario')->where('usuario_id','=', $request->usuario_id)->update($data);
     return redirect('principal'); //Redirecciona al view de Segusuario
   }
