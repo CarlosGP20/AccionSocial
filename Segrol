@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Segrol extends Model
 {
-  protected $table = 'SegRol';
+  protected $table = 'segrol';
   protected $primaryKey = 'rol_id';
 
   public $timestamps = false;
 
-  protected $fillable = ['rol_id', 'cobrador_id', 'rzs_id', 'usuario_id','rol_descripcion'];
+  protected $fillable = ['rol_id','rol_descripcion'];
 }
