@@ -12,10 +12,8 @@ class Segrol_controller extends Controller
 
   public function store(Request $request)//guarda un nuevo lote
   {
-    $usuarioid = $request->input('usuario_id');
-    $cobradorid = $request->input('cobrador_id');
-    $rzsid = $request->input('rzs_id');
-    $data = array('usuario_id'=>$usuarioid,'cobrador_id'=>$cobradorid,'rzs_id'=>$rzsid);
+    $roldescripcion = $request->input('rol_descripcion');
+    $data = array('rol_descripcion'=>$roldescripcion);
     DB::table('SegRol')->insert($data);
     return back();
   }
@@ -26,30 +24,12 @@ class Segrol_controller extends Controller
     return back();
   }
 
-  public function getRolUsuario()
+  public function getRol($rolid)
   {
     $roles = DB::table('SegRol')
-        ->join('segusuario', 'segusuario.usuario_id', '=', 'segrol.usuario_id')
+        ->where('rol_id', '=', $rolid)->delete();
         ->select('SegRol.*')
         ->get();
     //return view('Roles', ['roles' => $roles]);
   }
-
-  public function getRolCobrador()
-  {
-    $roles = DB::table('SegRol')
-        ->join('cobrador', 'cobrador.cobrador_id', '=', 'segrol.usuario_id')
-        ->select('SegRol.*')
-        ->get();
-    //return view('Roles', ['roles' => $roles]);
-  }
-  public function getRolRazonSocial()
-  {
-    $roles = DB::table('SegRol')
-        ->join('razon_social', 'razon_social.rzs_id', '=', 'segrol.usuario_id')
-        ->select('SegRol.*')
-        ->get();
-    //return view('Roles', ['roles' => $roles]);
-  }
-
 }
