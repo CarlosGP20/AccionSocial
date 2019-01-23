@@ -11,5 +11,5 @@ class Segusuario extends Model
 
   public $timestamps = false;
 
-  protected $fillable = ['usuario_id', 'usuario_username', 'usuario_nombre', 'usuario_email','usuario_contraseña'];
+  protected $fillable = ['usuario_id', 'rzs_id','rol_id','usuario_username', 'usuario_nombre', 'usuario_email','usuario_contraseña'];
 }
