@@ -12,13 +12,32 @@ class Segusuario_controller extends Controller
 
   public function show()
   {
-    $ = DB::table('segusuario')
+    $usuario = DB::table('segusuario')
         ->join('SegRol', 'segusuario.rol_id', '=', 'segrol.rol_id')
         ->join('razon_social', 'razon_social.rzs_id', '=', 'segusuario.rzs_id')
         ->select('segusuario.*')
         ->get();
-    //return view('lotes', ['lotes' => $lotes]);
+    return view('usuario', ['usuario' => $usuario]);
   }
+  
+  public function getRol($username)
+  {
+    $rolusuario = DB::table('segusuario')
+        ->select('segusuario.rol_id')
+        ->where('usuario_username', '=', $username)
+        ->get();
+    return $rolusuario;
+  }
+  
+  public function getRazonSocial($username)
+  {
+    $rzsusuario = DB::table('segusuario')
+        ->select('segusuario.rzs_id')
+        ->where('usuario_username', '=', $username)
+        ->get();
+    return $rzsusuario;
+  }
+  
   public function verificar($usuario, $contraseña)//Carga los datos de usuario
   {
     $usuario = DB::table('segusuario')
