@@ -1,0 +1,74 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Cobrador;
+use App\Segrol;
+
+class Cobrador_controller extends Controller
+{
+  public function index()
+  {
+  }
+
+  public function show()
+  {
+    $usuario = DB::table('cobrador')
+        ->join('Segrol', 'cobrador.rol_id', '=', 'segrol.rol_id')
+        ->select('segusuario.*')
+        ->get();
+    return view('cobrador', ['cobrador' => $usuario]);
+  }
+  
+  public function getRol($cobradorid)
+  {
+    $rolcobrador = DB::table('cobrador')
+        ->select('cobrador.rol_id')
+        ->where('cobrador_id', '=', $cobradorid)
+        ->get();
+    return $rolcobrador;
+  }
+  
+
+  public function store(Request $request)//guarda un nuevo cobrador
+  {
+    $rolid = $request->input('rol_id');
+    $rzsid = $request->input('rzs_id');
+    $username = $request->input('usuario_username');
+    $nombre = $request->input('usuario_nombre');
+    $email = $request->input('usuario_email');
+    $contraseña = $request->input('usuario_contraseña');
+    $data = array('usuario_username'=>$username,'rol_id'=>$rolid,'rzs_id'=>$rzsid,'usuario_nombre'=>$nombre,'usuario_email'=>$email,'usuario_contraseña'=>$contraseña);
+    DB::table('segusuario')->insert($data);
+    return back();
+  }
+//Tal vez no se debería borrar un cobrador
+/*
+  public function destroy($cobradorid) //Funcion para eliminar un usuario
+  {
+    DB::table('cobrador')->where('cobrador_id', '=', $cobradorid)->delete();
+    return back();
+  }*/
+
+  public function edit($cobradorid)//Carga los datos del cobrador
+  {
+    $cobrador = DB::table('cobrador')
+    ->join('SegRol', 'cobrador.rol_id', '=', 'segrol.rol_id')
+    ->select('cobrador.*')
+    ->where('cobrador_id','=',$cobradorid)
+    ->get();
+    return view('cobradoredit', ['cobrador' => $cobrador]); //Retorna view para editar
+  }
+
+  public function update(Request $request)
+  {
+    $rolid = $request->input('rol_id');
+    $cobradornombre = $request->input('cobrador_nombre');
+    $cobradorcedula = $request->input('cobrador_cedula');
+    $cobradordireccion = $request->input('cobrador_direccion');
+    $data = array('rol_id'=>$rolid,'cobrador_nombre'=>$cobradornombre,'cobrador_cedula'=>$cobradorcedula,'cobrador_direccion'=>$cobradordireccion);
+    DB::table('cobrador')->where('cobrador_id','=', $request->cobrador_id)->update($data);
+    return redirect('principal'); //Redirecciona al view principal
+  }
+}
