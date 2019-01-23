@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Segrol;
+use App\RazonSocial;
 
 class Segusuario_controller extends Controller
 {
@@ -13,7 +15,7 @@ class Segusuario_controller extends Controller
   public function show()
   {
     $usuario = DB::table('segusuario')
-        ->join('SegRol', 'segusuario.rol_id', '=', 'segrol.rol_id')
+        ->join('Segrol', 'segusuario.rol_id', '=', 'segrol.rol_id')
         ->join('razon_social', 'razon_social.rzs_id', '=', 'segusuario.rzs_id')
         ->select('segusuario.*')
         ->get();
