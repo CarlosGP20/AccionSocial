@@ -11,5 +11,5 @@ class RazonSocial extends Model
 
   public $timestamps = false;
 
-  protected $fillable = ['rzs_id', 'comunidad_id', 'rol_id', 'rzs_ruc','rzs_telefono','rzs_direccion','rzs_nombre'];
+  protected $fillable = ['rzs_id', 'comunidad_id', 'rzs_ruc','rzs_telefono','rzs_direccion','rzs_nombre'];
 }
